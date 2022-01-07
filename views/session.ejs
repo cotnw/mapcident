@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+<head>
+    <title>Mapcident</title>
+    <link rel="icon" href="http://mapmyindia.com/images/favicon.ico" type="image/x-icon" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+        html {
+            height: 100%;
+        }
+        
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+    <script src="https://apis.mapmyindia.com/advancedmaps/v1/aa6ca1e6c399bc880ca03d0e1c03b197/map_load?v=2.1"></script>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script>
+        var map = null;
+        var marker = [];
+        let crashes = [
+            [28.4231024, 77.0641806]
+        ];
+        let currentPosition = [];
+        navigator.geolocation.getCurrentPosition(showPosition);
+
+        function showPosition(position) {
+            currentPosition = [position.coords.latitude, position.coords.longitude];
+            console.log(currentPosition);
+            map = new MapmyIndia.Map('map', {
+                center: currentPosition,
+                zoomControl: true,
+                hybrid: true
+            });
+
+            function mapmyindia_fit_markers_into_bound(position) {
+                var maxlat = position.lat;
+                var maxlon = position.lng;
+                var minlat = position.lat;
+                var minlon = position.lng;
+                var southWest = L.latLng(maxlat, maxlon);
+                var northEast = L.latLng(minlat, minlon);
+                var bounds = L.latLngBounds(southWest, northEast);
+                map.fitBounds(bounds);
+            }
+
+            function addMarker(position, icon, title, draggable) {
+                if (icon == '') {
+                    var mk = new L.Marker(position, {
+                        draggable: draggable,
+                        title: title
+                    });
+                } else {
+                    var mk = new L.Marker(position, {
+                        icon: icon,
+                        draggable: draggable,
+                        title: title
+                    });
+                }
+                map.addLayer(mk);
+                mk.on("click", function(e) {
+                    mapmyindia_fit_markers_into_bound(position);
+                    calculateDistance(position);
+                });
+                return mk;
+            }
+
+            function calculateDistance(crashPosition) {
+                let url = `https://api.radar.io/v1/route/distance?origin=${currentPosition[0]},${currentPosition[1]}&destination=${crashPosition.lat},${crashPosition.lng}&modes=car&units=metric`;
+                fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': 'prj_live_sk_023b2379b86ae218901dd83336e69dce2f8276ac'
+                        }
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data);
+                    })
+                    .catch(err => console.log(err));
+            }
+
+            function markCurrentLocation() {
+                var icon = L.icon({
+                    iconUrl: 'https://media.discordapp.net/attachments/872743735388172318/929084635126857768/unknown.png',
+                    iconRetinaUrl: 'https://media.discordapp.net/attachments/872743735388172318/929084635126857768/unknown.png',
+                    iconSize: [30, 30],
+                    popupAnchor: [-3, -15]
+                });
+                var position = new L.LatLng(currentPosition[0], currentPosition[1]);
+                var mk = addMarker(currentPosition, icon, 'Current Location', false);
+            }
+
+            function loadAllCrashes() {
+                var icon = L.icon({
+                    iconUrl: 'https://media.discordapp.net/attachments/872743735388172318/929051528285806642/unknown.png',
+                    iconRetinaUrl: 'https://media.discordapp.net/attachments/872743735388172318/929051528285806642/unknown.png',
+                    iconSize: [100, 100],
+                    popupAnchor: [-3, -15]
+                });
+                for (let i = 0; i < crashes.length; i++) {
+                    var position = new L.LatLng(crashes[i][0], crashes[i][1]);
+                    console.log(position)
+                    marker.push(addMarker(position, icon, "", false));
+                }
+            }
+            markCurrentLocation();
+            loadAllCrashes();
+        }
+    </script>
+</body>
+
+</html>

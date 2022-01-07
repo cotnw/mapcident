@@ -5,6 +5,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const indexRouter = require('./routes/index');
+const sessionRouter = require('./routes/session');
 
 const db = process.env.DB_URI;
 
@@ -31,5 +32,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
 app.use('/', indexRouter);
+app.use('/session', sessionRouter);
 
 module.exports = app;
