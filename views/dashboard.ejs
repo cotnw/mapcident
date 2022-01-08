@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/register.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
     <script src="/js/common.js"></script>
-    <script src="/js/register.js"></script>
+    <script src="/js/dashboard.js"></script>
     <link rel="icon" href="/assets/logo-mc.png" sizes="16x16" type="image/png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <title>Mapcident</title>
 </head>
 <body>
@@ -28,83 +28,46 @@
             </clipPath>
             </defs>
         </svg>
-        <p class="step-text">Step <span id="step-number">1</span>/3</p>
     </div>
-    <div id="p1">
-        <div class="header">
-            <h1>Register with <span style="font-weight: 800; color: #F15D2E; font-style: bold;">Mapcident</span> <img src="https://cdn.discordapp.com/attachments/872743735388172318/928747307028066334/world-map_1f5fa.png">
-            </h1>
-            <p>
-                Fill in your name, phone number, gender, and blood group. You will be identified by these details.
-            </p>
-        </div>
-        <div class="inputs">
-            <div class="input">
-                <p>Your Name</p>
-                <input type="text" name="u-name" autocomplete="disabled">
-            </div>
-            <div class="input">
-                <p>Your Phone Number</p>
-                <input type="text" name="uphone-number" autocomplete="disabled">
-            </div>
-            <div class="inline-input">
-                <div class="input">
-                    <p>Gender</p>
-                    <input type="text" name="ugender" autocomplete="disabled" style="width: 75%;">
-                </div>
-                <div class="input">
-                    <p>Blood Group</p>
-                    <input type="text" name="ublood-group" autocomplete="disabled">
-                </div>
-            </div>
-        </div>
-        <button class="continue">Continue</button>
+    <div class="header">
+        <h1>Good morning <span style="font-weight: 800; font-style: bold;" id="dname"></span></h1>
+        <button class="start-session">Start Session</button>
     </div>
-    <div id="p2">
-        <div class="header">
-            <h1>Add <span style="font-weight: 800; color: #F15D2E; font-style: bold;margin-left: 2.5vw;">emergency</span> contact <img src="https://cdn.discordapp.com/attachments/872743735388172318/928747409218084904/squared-sos_1f198.png">
-            </h1>
-            <p>
-                Fill in your emergency contact's full name, your relation with them, and their phone number.
-            </p>
-        </div>
-        <div class="inputs">
-            <div class="input">
-                <p>Full Name</p>
-                <input type="text" name="ecfull-name" autocomplete="disabled">
-            </div>
-            <div class="input">
-                <p>Your Relation</p>
-                <input type="text" name="ecrelation" autocomplete="disabled">
-            </div>
-            <div class="input">
-                <p>Phone Number</p>
-                <input type="text" name="ecphone-number" autocomplete="disabled">
-            </div>
-        </div>
-        <button class="continue">Continue</button>
+    <hr style="border: 1px solid #000000; opacity: 0.1; width: 75vw; text-align:center; margin-top: 7vw; margin-left: 4vw;">
+    <div class="profile-wrapper">
+        <p>Your profile</p>
     </div>
-    <div id="p3">
-        <div class="header">
-            <h1>Set your timer <span style="font-weight: 800; color: #F15D2E; font-style: bold;margin-right: 2.5vw;">alert</span> limit <img src="https://cdn.discordapp.com/attachments/872743735388172318/928747591347372083/alarm-clock_23f0.png">
-            </h1>
-            <p>
-                Set a time after which we will send an alert if you don't respond to an accident detection. Maximum limit is 2 minutes.
-            </p>
-        </div>
-        <div class="inputs">
-            <div class="inline-input-timer">
-                <input autocomplete="disabled" placeholder="0" type="number" name="first-minute" maxlength="1" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
-                <input autocomplete="disabled" placeholder="1" type="number" name="second-minute" style="margin-right: 0vw;" maxlength="1" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
-                <h1 style="font-weight: 800; font-size: 10vw; margin-right: 2vw; margin-left: 2vw;">:</h1>
-                <input autocomplete="disabled"placeholder="3" type="number" name="first-second" maxlength="1" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
-                <input autocomplete="disabled" placeholder="0" type="number" name="second-second" style="margin-right: 0vw;" maxlength="1" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
-            </div>
-            <div class="inline-text">
-                <p>MINS</p><p style="margin-left: 38vw">SEC</p>
+    <div class="profile-card">
+        <div class="top-profile">
+            <img src="https://cdn.discordapp.com/attachments/872743735388172318/929118038014451722/unknown.png">
+            <div style="display: block;">
+                <p id="name"></p>
+                <p style="font-size: 4vw; color: #474747; margin-top: -4vw" id="gp"></p>
             </div>
         </div>
-        <button class="continue" style="margin-top: 49vw;">Register</button>
+        <div class="user-info">
+            <p>Emergency Contact<br><span style="font-size: 4.5vw; font-weight: 600; color: #F15D2E;" id="epn"></span></p>
+            <p>Alert limit<br><span style="font-size: 4.5vw; font-weight: 600; color: #F15D2E;" id="at"></span></p>
+        </div>
+        <div class="karma-info">
+            <p>Karmas earned</p>
+            <p style="font-size: 12vw;display: flex; margin-top: 5vw;"><span id="karma">52</span><img src="https://cdn.discordapp.com/attachments/872743735388172318/929255270700433458/unknown.png"></p>
+        </div>
+    </div>
+    <div class="profile-wrapper">
+        <p style="margin-top: 10vw;">Your past records</p>
+    </div>
+    <div class="past-records" id="past-records">
+        <div class="record">
+            <div class="top-record">
+                <p>8th January<br><span style="font-weight: 400; color: #474747;">Saturday</span></p>
+                <p style="font-size: 6vw; font-weight: 400; color: #474747;margin-top: 4vw">03:21</p>
+            </div>
+            <div class="bottom-record">
+                <img src="https://cdn.discordapp.com/attachments/872743735388172318/929265924463284255/unknown.png">
+                <p style="font-size: 12vw;display: flex; margin-top: 5vw;">+10<img src="https://cdn.discordapp.com/attachments/872743735388172318/929255270700433458/unknown.png"></p>
+            </div>
+        </div>
     </div>
 </body>
 </html>

@@ -38,6 +38,16 @@ const UserSchema = new mongoose.Schema({
     alert_time: {
         type: Number,
         required: true
+    },
+    past_records: {
+        type: Array,
+        required: false,
+        default: []
+    },
+    karma: {
+        type: Number,
+        required: false,
+        default: 0
     }
 })
 
