@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const cors = require('cors');
+const socketIO = require('socket.io');
 require('dotenv').config();
 
 const indexRouter = require('./routes/index');
@@ -12,10 +13,12 @@ const db = process.env.DB_URI;
 const app = express();
 
 const port = process.env.PORT || 3000;
-app.listen(port, (err) => {
+const server = app.listen(port, (err) => {
     console.log(`Server started on ${port}!`);
     if (err) throw err;
 });
+
+const io = socketIO(server, { cors: true, origins: '*:*' });
 
 mongoose.connect(db, { useUnifiedTopology: true, useNewUrlParser: true })
     .then(() => console.log('MongoDB Connected...'))
@@ -33,5 +36,11 @@ app.use(cors());
 
 app.use('/', indexRouter);
 app.use('/session', sessionRouter);
+
+io.on('connection', socket => {
+    console.log('a user connected: ' + socket.id);
+    socket.on('crash', async(info) => { // Disconnect event
+    })
+});
 
 module.exports = app;

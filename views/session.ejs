@@ -21,6 +21,13 @@
             width: 100%;
         }
     </style>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io("http://localhost:3000");
+        socket.on("connect", () => {
+            console.log(socket.id);
+        });
+    </script>
     <script src="https://apis.mapmyindia.com/advancedmaps/v1/aa6ca1e6c399bc880ca03d0e1c03b197/map_load?v=2.1"></script>
 </head>
 
@@ -30,7 +37,7 @@
         var map = null;
         var marker = [];
         let crashes = [
-            [28.4231024, 77.0641806]
+            [28.388988, 77.057178]
         ];
         let currentPosition = [];
         navigator.geolocation.getCurrentPosition(showPosition);
