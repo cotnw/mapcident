@@ -43,6 +43,7 @@ function showPosition(position) {
         mk.on("click", function(e) {
             mapmyindia_fit_markers_into_bound(position);
             // calculateDistance(position);
+            document.getElementById('bottom-card').style.display = "block"
         });
         return mk;
     }
@@ -100,6 +101,20 @@ document.getElementById('skip').addEventListener('click', () => {
     document.getElementById('alertModal').style.display = "none"
 })
 
+document.getElementById('backSession').addEventListener('click', () => {
+    document.getElementById('successAlert').style.display = "none"
+})
+
+document.getElementById('bottom-card-respond-button').addEventListener('click', () => {
+    document.getElementById('bottom-card').style.display = 'none'
+    document.getElementById('expanded-bottom-card').style.display = 'block'
+})
+
+document.getElementById('respond-button').addEventListener('click', () => {
+    document.getElementById('alertModal').style.display = 'none'
+    document.getElementById('expanded-bottom-card').style.display = 'block'
+})
+
 document.getElementById('end').addEventListener('click', () => {
     // send time of session and karma collected to a past record saving endpoint
     console.log(document.getElementsByClassName('timer')[0].innerHTML)
@@ -152,3 +167,7 @@ function checkTime(i) {
     }
     return i;
 }
+
+document.getElementById('map').addEventListener('click', () => {
+    document.getElementById('bottom-card').style.display = "none"
+})

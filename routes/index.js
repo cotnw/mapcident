@@ -30,6 +30,10 @@ router.get('/dashinfo', async (req, res) => {
     res.json({success: true, user: user})
 })
 
+router.get('/alert', (req, res) => {
+    res.render("alert")
+})
+
 router.get('/phone', (req, res) => {
     res.send("Please open this website on your phone's browser.");
 })

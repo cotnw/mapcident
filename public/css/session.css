@@ -221,3 +221,130 @@ a {
     margin-top: 6vw;
     color: black;
 }
+
+.expanded-bottom-card {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 88.5%;
+    height: 125vw;
+    background: white;
+    border-top-right-radius: 45px;
+    border-top-left-radius: 45px;
+    padding: 6vw;
+    z-index: 1;
+    display: none;
+}
+
+.inline {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}
+
+.expanded-bottom-card h1 {
+    font-weight: 600;
+    font-weight: 8.5vw;
+    margin-top: 2vw;
+}
+    
+.expanded-bottom-card p {
+    font-weight: 400;
+    font-style: normal;
+    font-size: 4.5vw;
+    margin-top: 3vw;
+    color: #474747;
+}
+
+.expanded-bottom-card img {
+    filter: drop-shadow(0px 2.5px 12px rgba(0, 0, 0, 0.08));
+    height: 23vw;
+    width: auto;
+}
+
+.profile-wrapper {
+    display: flex;
+    flex-flow: row wrap;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3vw;
+}
+
+.profile-wrapper p {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 5.5vw;
+}
+
+.profile-card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    width: 87vw;
+    margin-top: -7vw
+}
+
+.top-profile {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.top-profile img {
+    height: 16vw;
+    width: 16vw;
+    margin-left: 2vw;
+    margin-top: 5vw;
+    margin-right: 4vw;
+}
+
+.top-profile p {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 4.5vw;
+    margin-top: 5.2vw;
+}
+
+.user-info {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    margin-left: 2vw;
+    width: 65vw;
+    margin-top: -2vw;
+    /* margin-bottom: 2vw; */
+}
+
+.user-info p {
+    font-size: 4vw;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.pending-button {
+    border: none;
+    border-radius: 12px;
+    width: 87.5vw;
+    height: 16vw;
+    background: #A6A6A6;
+    color: white;
+    font-size: 5.7vw;
+    text-align: center;
+    font-family: 'Inter';
+    margin-top: 2vw;
+}
+
+#success-button {
+    background: #43B862;
+}
+
+#succ-img {
+    width: 55vw;
+    height: auto;
+    margin-bottom: 6vw;
+    margin-left: -6vw;
+    margin-right: -6vw;
+    margin-top: -6vw;
+}
+
+#karma-line {
+    margin-left: 25vw;
+}
