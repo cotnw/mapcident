@@ -2,15 +2,13 @@
 
 ## Problem Statement ⚠️
 
-The [Global status report](https://www.who.int/publications-detail-redirect/9789241565684) on road safety **by WHO, published in **2018**, highlights that the number of annual road traffic deaths has reached **1.35 million**. Road traffic injuries are now the leading killer of people aged between **5-29 years.**
+The [Global status report](https://www.who.int/publications-detail-redirect/9789241565684) on road safety **by WHO, published in **2018**, highlights that the number of annual road traffic deaths has reached **1.35 million**. Road traffic injuries are now the leading killer of people aged between **5-29 years.**
 
 A few major causes of these deaths and critical injuries are the **late medical response**, **bystanders’ negligence,** and **inability to contact** the right emergency services. The matter in concern is very critical and for the person involved in such accidents, every second is crucial for their health. 
 
 A worse scenario could be that someone is present a few miles from where you have crashed and could help save your life, but isn’t aware of the accident.
 
 Such preventable yet tragic scenarios are present in our day-to-day life and lead to the 1.35 million deaths we see each year and that’s what we seek to solve with **Mapcident** 
-
----
 
 ## Solution ✅
 
@@ -44,8 +42,6 @@ Such preventable yet tragic scenarios are present in our day-to-day life and lea
 
 This map would be used in our second feature which is that any person using the app could see **active accident sites** near them so that they can go over to the specific location to provide aid. Also, a notification overlay would be displayed on the devices of other users active in the proximity of a recently occurred accident.
 
----
-
 ## Hurdles We Overcame 🚧
 
 Helping in such a situation is generally human nature, however, some people require an incentive to commit good deeds. That’s why we aim to provide **“Karmas 🧡”** as credits to the users if they go to a location and manage to help the injured person. These credits would be redeemable at stores/brands we plan to partner with in the future.
@@ -55,8 +51,6 @@ Knowing that this is a very sensitive issue, and false reporting could lead to a
 Another questionable yet possible act from the user end was the possibility of a user faking a helping act just to earn credits. This was a crucial hurdle for us since if not handled correctly it would’ve disrupted the functioning of the whole product. We tackled it by using Resonance  that verifies the assistance only if the helper’s microphone is detected within the range of the victim’s device.
 
 Looking at this situation from a user experience perspective we have designed the user interface such that it’s easily navigable and accessible. Emphasis on big buttons and text is prominent throughout the app and usage of bright red color for the SOS pop-screens makes it easier for users to identify the screens and alerts.
-
----
 
 ## Tech Stack Used 👨🏻‍💻
 
@@ -70,8 +64,6 @@ Looking at this situation from a user experience perspective we have designed th
 8. Geolocation API 
 9. Socket.io
 
----
-
 ## Future Prospects 🔮
 
 Since the problem we are picking up - Road Safety is a global problem, there would be demand all over the globe all over the year, not seasonal.
@@ -81,5 +73,3 @@ Our primary objective would be to tie up with government organizations or health
 1. Self reporting by the user network and authenticating them (like Gmaps does with traffic jams)
 2. Later we plan to expand and add the AI assistance feature that would give deeper insight into studying your past records of the user’s driving session. Ultimately our goal would be to use this data to reduce the risks on the road.
 3. We’d be storing important information on crashes/accidents that would prove to be useful for the automotive industry safety standards.
-
----
