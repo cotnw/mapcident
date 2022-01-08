@@ -64,4 +64,14 @@ router.post('/user/record', (req, res) => {
     })
 })
 
+router.post('/report', async (req, res) => {
+    const report = new Report({
+        victim: req.body.victim,
+        location: req.body.location,
+        date: new Date()
+    })
+    await report.save()
+    res.json({ success: true })
+})
+
 module.exports = router

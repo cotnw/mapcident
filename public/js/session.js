@@ -7,6 +7,13 @@ let resonanceId = "";
 navigator.geolocation.getCurrentPosition(showPosition);
 let karma = 0;
 
+const socket = io("/");
+
+socket.on("connect", () => {
+    console.log(socket.id);
+    fetch(`/api/user/socket?token=${localStorage.getItem('accessToken')}&socket_id=${socket.id}`).then(res => {});
+});
+
 window.resonanceAsyncInit = function() {
     if (!Resonance.isCompatible()) {
         console.error('Your browser is not supported');
@@ -128,6 +135,32 @@ function showPosition(position) {
         return mk;
     }
 
+    socket.on("crash", (crashObject) => {
+        console.log(crashObject);
+        var icon = L.icon({
+            iconUrl: 'https://media.discordapp.net/attachments/872743735388172318/929051528285806642/unknown.png',
+            iconRetinaUrl: 'https://media.discordapp.net/attachments/872743735388172318/929051528285806642/unknown.png',
+            iconSize: [100, 100],
+            popupAnchor: [-3, -15]
+        });
+        var position = new L.LatLng(crashObject.location[0], crashObject.location[1]);
+        let url = `https://api.radar.io/v1/route/distance?origin=${currentPosition[0]},${currentPosition[1]}&destination=${crashObject.location[0]},${crashObject.location[1]}&modes=car&units=metric`;
+        fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'prj_live_sk_023b2379b86ae218901dd83336e69dce2f8276ac'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.routes.car.distance.value < 4000) {
+                    marker.push(addMarker(position, icon, JSON.stringify(crashObject), false));
+                    document.getElementById('dist').innerHTML = data.routes.car.distance.text + ' away'
+                    document.getElementById("alertModal").style.display = 'block';
+                }
+            });
+    })
+
     async function calculateDistance(crashPosition, crashResponse) {
         let crash = JSON.parse(crashResponse);
         let date = new Date(crash.date);
@@ -242,7 +275,6 @@ document.getElementsByClassName('pending-button')[0].addEventListener('click', (
 
 document.getElementById('respond-button').addEventListener('click', () => {
     document.getElementById('alertModal').style.display = 'none'
-    document.getElementById('expanded-bottom-card').style.display = 'block'
 })
 
 document.getElementById('end').addEventListener('click', () => {

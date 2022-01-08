@@ -41,7 +41,10 @@ app.use('/api', apiRouter);
 
 io.on('connection', socket => {
     console.log('a user connected: ' + socket.id);
-    socket.on('crash', async(info) => { // Disconnect event
+    socket.on('crash', async(info) => {
+        console.log(info)
+        io.sockets.emit('crash', info);
+        // Disconnect event
     })
 });
 
