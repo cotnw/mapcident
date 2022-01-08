@@ -61,10 +61,9 @@ Looking at this situation from a user experience perspective we have designed th
 4. EJS
 5. MapMyIndia API
 6. DeviceMotionEvent API
-7. Resonance
-8. Geolocation API 
-9. Socket.io
-10. Radar.io
+7. Geolocation API 
+8. Socket.io
+9. Radar.io
 
 ## Future Prospects 🔮
 
