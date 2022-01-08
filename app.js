@@ -7,6 +7,7 @@ require('dotenv').config();
 
 const indexRouter = require('./routes/index');
 const sessionRouter = require('./routes/session');
+const apiRouter = require('./routes/api');
 
 const db = process.env.DB_URI;
 
@@ -36,6 +37,7 @@ app.use(cors());
 
 app.use('/', indexRouter);
 app.use('/session', sessionRouter);
+app.use('/api', apiRouter);
 
 io.on('connection', socket => {
     console.log('a user connected: ' + socket.id);

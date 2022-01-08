@@ -1,10 +1,73 @@
 var map = null;
 var marker = [];
-let crashes = [
-    [28.488988, 77.057178]
-];
+let crashes = [];
 let currentPosition = [];
+let currentMarkerLocation = [];
+let resonanceId = "";
 navigator.geolocation.getCurrentPosition(showPosition);
+
+window.resonanceAsyncInit = function() {
+    if (!Resonance.isCompatible()) {
+        console.error('Your browser is not supported');
+    }
+    console.log('resonance;')
+    var resonance = new Resonance('9ab05624-9086-4b88-9606-a8ffad4932ed');
+
+    resonance.startSearch('Hey', function(error) {
+        if (error) {
+            console.error(error.message);
+        } else {
+            resonanceId = resonance.wsClient._clientId;
+            console.log('resonance id : ' + resonanceId)
+            fetch(`/api/user/resonance?token=${localStorage.getItem('accessToken')}&resonance_id=${resonance.wsClient._clientId}`).then(res => res.json()).then(data => {
+                console.log(data)
+            })
+        }
+    });
+
+    resonance.on('nearbyFound', function(nearby) {
+        console.log(nearby.clientId);
+    });
+
+    resonance.on('searchStopped', function(error) {
+        if (error) {
+            console.error(error.message);
+        } else {
+            // search was stopped normally
+        }
+    });
+};
+
+function timeSince(date) {
+
+    var seconds = Math.floor((new Date() - date) / 1000);
+
+    var interval = seconds / 31536000;
+
+    if (interval > 1) {
+        return Math.floor(interval) + " years";
+    }
+    interval = seconds / 2592000;
+    if (interval > 1) {
+        return Math.floor(interval) + " months";
+    }
+    interval = seconds / 86400;
+    if (interval > 1) {
+        return Math.floor(interval) + " days";
+    }
+    interval = seconds / 3600;
+    if (interval > 1) {
+        return Math.floor(interval) + " hours";
+    }
+    interval = seconds / 60;
+    if (interval > 1) {
+        return Math.floor(interval) + " minutes";
+    }
+    return Math.floor(seconds) + " seconds";
+}
+var aDay = 24 * 60 * 60 * 1000;
+console.log(timeSince(new Date(Date.now() - aDay)));
+console.log(timeSince(new Date(Date.now() - aDay * 2)));
 
 function showPosition(position) {
     currentPosition = [position.coords.latitude, position.coords.longitude];
@@ -14,6 +77,20 @@ function showPosition(position) {
         zoomControl: true,
         hybrid: true
     });
+
+    function getAllCrashes() {
+        let url = `/api/crashes`;
+        fetch(url).then(res => res.json()).then(data => {
+            console.log(data);
+            for (let i = 0; i < data.length; i++) {
+                let lat = data[i].location[0];
+                let lon = data[i].location[1];
+                let crash = [lat, lon];
+                crashes.push(crash);
+            }
+            loadAllCrashes(data);
+        });
+    }
 
     function mapmyindia_fit_markers_into_bound(position) {
         var maxlat = position.lat;
@@ -40,15 +117,18 @@ function showPosition(position) {
             });
         }
         map.addLayer(mk);
-        mk.on("click", function(e) {
+        mk.on("click", async function(e) {
             mapmyindia_fit_markers_into_bound(position);
-            // calculateDistance(position);
-            document.getElementById('bottom-card').style.display = "block"
+            currentMarkerLocation = [position.lat, position.lng];
+            calculateDistance(position, title);
+            console.log(title)
         });
         return mk;
     }
 
-    function calculateDistance(crashPosition) {
+    async function calculateDistance(crashPosition, crashResponse) {
+        let crash = JSON.parse(crashResponse);
+        let date = new Date(crash.date);
         let url = `https://api.radar.io/v1/route/distance?origin=${currentPosition[0]},${currentPosition[1]}&destination=${crashPosition.lat},${crashPosition.lng}&modes=car&units=metric`;
         fetch(url, {
                 method: 'GET',
@@ -58,7 +138,12 @@ function showPosition(position) {
             })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
+                document.querySelector('#bottom-card > h1').innerHTML = data.routes.car.distance.text + ' away';
+                document.querySelector('#bottom-card > p').innerHTML = 'Last updated ' + timeSince(date) + ' ago';
+                document.querySelector('#expanded-bottom-card > div > div > h1').innerHTML = data.routes.car.distance.text + ' away';
+                document.querySelector('#expanded-bottom-card > div > div > p').innerHTML = 'Last updated ' + timeSince(date) + ' ago';
+                document.querySelector('#victim-id').value = crash.victim;
+                document.getElementById('bottom-card').style.display = "block"
             })
             .catch(err => console.log(err));
     }
@@ -74,7 +159,7 @@ function showPosition(position) {
         var mk = addMarker(currentPosition, icon, 'Current Location', false);
     }
 
-    function loadAllCrashes() {
+    function loadAllCrashes(crashResponse) {
         var icon = L.icon({
             iconUrl: 'https://media.discordapp.net/attachments/872743735388172318/929051528285806642/unknown.png',
             iconRetinaUrl: 'https://media.discordapp.net/attachments/872743735388172318/929051528285806642/unknown.png',
@@ -84,11 +169,11 @@ function showPosition(position) {
         for (let i = 0; i < crashes.length; i++) {
             var position = new L.LatLng(crashes[i][0], crashes[i][1]);
             console.log(position)
-            marker.push(addMarker(position, icon, "", false));
+            marker.push(addMarker(position, icon, JSON.stringify(crashResponse[i]), false));
         }
     }
+    getAllCrashes();
     markCurrentLocation();
-    loadAllCrashes();
 }
 
 document.getElementById('begin').addEventListener('click', () => {
@@ -105,7 +190,21 @@ document.getElementById('backSession').addEventListener('click', () => {
     document.getElementById('successAlert').style.display = "none"
 })
 
+document.getElementById('google-maps-icon').addEventListener('click', () => {
+    window.open(`https://maps.google.com/?q=${currentMarkerLocation[0]},${currentMarkerLocation[1]}`)
+})
+
 document.getElementById('bottom-card-respond-button').addEventListener('click', () => {
+    socket.emit('respond', { victim: document.querySelector('#victim-id').value, resonance_id: resonanceId });
+    let url = '/api/user';
+    fetch(`${url}?token=${document.querySelector('#victim-id').value}`).then(res => res.json()).then(data => {
+        console.log(data);
+        document.querySelector('#name').innerHTML = data.name;
+        document.querySelector('#gp').innerHTML = `${data.gender}, ${data.phone_number}`;
+        document.querySelector('#bg').innerHTML = `Blood Group: ${data.blood_group}`;
+        document.querySelector('#epn').innerHTML = `${data.emergency_contact.phone_number}`;
+        document.querySelector('#at').innerHTML = `${data.alert_time}s`;
+    }).catch(err => console.log(err));
     document.getElementById('bottom-card').style.display = 'none'
     document.getElementById('expanded-bottom-card').style.display = 'block'
 })
@@ -123,8 +222,8 @@ document.getElementById('end').addEventListener('click', () => {
 
 function start() {
     x = setInterval(timer, 10);
-} 
-  
+}
+
 var milisec = 0;
 var sec = 0;
 var min = 0;
@@ -140,22 +239,22 @@ function timer() {
     secOut = checkTime(sec);
     minOut = checkTime(min);
     hourOut = checkTime(hour);
-  
+
     milisec = ++milisec;
-  
+
     if (milisec === 100) {
-      milisec = 0;
-      sec = ++sec;
+        milisec = 0;
+        sec = ++sec;
     }
-  
+
     if (sec == 60) {
-      min = ++min;
-      sec = 0;
+        min = ++min;
+        sec = 0;
     }
-  
+
     if (min == 60) {
-      min = 0;
-      hour = ++hour;
+        min = 0;
+        hour = ++hour;
     }
 
     document.getElementsByClassName('timer')[0].innerHTML = `${minOut}:${secOut}`;
@@ -163,7 +262,7 @@ function timer() {
 
 function checkTime(i) {
     if (i < 10) {
-      i = "0" + i;
+        i = "0" + i;
     }
     return i;
 }

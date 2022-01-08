@@ -19,7 +19,11 @@ const UserSchema = new mongoose.Schema({
     },
     socket_id: {
         type: String,
-        required: false
+        default: ""
+    },
+    resonance_id: {
+        type: String,
+        default: ""
     },
     emergency_contact: {
         name: {

@@ -8,11 +8,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <script src="/socket.io/socket.io.js"></script>
+    <script async defer src="https://cdn.getresonance.net/sdk/js/resonance-1.0.2.js"></script>
+    <script src="/js/acc.js"></script>
     <script>
-        const socket = io("http://localhost:3000");
+        const socket = io("/");
         socket.on("connect", () => {
             console.log(socket.id);
+            fetch(`/api/user/socket?token=${localStorage.getItem('accessToken')}&socket_id=${socket.id}`).then(res => {});
         });
+        socket.on("crash", (crashObject) => {
+            var icon = L.icon({
+                iconUrl: 'https://media.discordapp.net/attachments/872743735388172318/929051528285806642/unknown.png',
+                iconRetinaUrl: 'https://media.discordapp.net/attachments/872743735388172318/929051528285806642/unknown.png',
+                iconSize: [100, 100],
+                popupAnchor: [-3, -15]
+            });
+            var position = new L.LatLng(location[0], location[1]);
+            marker.push(addMarker(position, icon, JSON.stringify(crashObject), false));
+        })
     </script>
     <script src="https://apis.mapmyindia.com/advancedmaps/v1/aa6ca1e6c399bc880ca03d0e1c03b197/map_load?v=2.1"></script>
 </head>
@@ -26,7 +39,9 @@
             <p>We'll keep tracking your location while you're travelling. In case we detect any collision/accident we require the following</p>
             <img id="perms" src="https://cdn.discordapp.com/attachments/872743735388172318/929365318650953778/unknown.png">
             <button class="begin-session" id="begin">Begin</button>
-            <a href="/dashboard"><p id="gb">Go back</p></a>
+            <a href="/dashboard">
+                <p id="gb">Go back</p>
+            </a>
         </div>
     </div>
     <div id="alertModal" class="modal" style="display: none;">
@@ -46,7 +61,9 @@
             <h1 style="margin-bottom: -2vw">Here's your reward</h1>
             <p id="karma-line" style="font-size: 14vw;display: flex; margin-top: 5vw; font-weight: 600"><span id="karma">52</span><img style="height: 12vw; width: auto; margin-top: 3vw; margin-left: 2vw;" src="https://cdn.discordapp.com/attachments/872743735388172318/929255270700433458/unknown.png"></p>
             <button class="begin-session" id="backSession" style="margin-top: -8vw;">Back to session</button>
-            <a href="/dashboard"><p id="gb">Go to dashboard</p></a>
+            <a href="/dashboard">
+                <p id="gb">Go to dashboard</p>
+            </a>
         </div>
     </div>
     <div id="map-custom-stuff">
@@ -59,6 +76,7 @@
             </button>
         </div>
         <div class="bottom-card" id="bottom-card">
+            <input id="victim-id" type="hidden" value="">
             <h1>2.3km away</h1>
             <p style="margin-top: -4vw">Last updated 10s ago</p>
             <p>Accident confirmed nearby you, please reach the marked location and check on the passenger’s status. Authorities and helplines have already been contacted.</p>
@@ -70,7 +88,7 @@
                     <h1>2.3km away</h1>
                     <p style="margin-top: -4vw">Last updated 10s ago</p>
                 </div>
-                <img src="https://cdn.discordapp.com/attachments/872743735388172318/929401958761136158/unknown.png">
+                <img id="google-maps-icon" src="https://cdn.discordapp.com/attachments/872743735388172318/929401958761136158/unknown.png">
             </div>
             <p>Accident confirmed nearby you, please reach the marked location and check on the passenger’s status. Authorities and helplines have already been contacted.</p>
             <hr style="border: 1px solid #000000; opacity: 0.1; width: 75vw; text-align:center; margin-top: 7vw; margin-left: 4vw;">
@@ -83,7 +101,7 @@
                     <div style="display: block;">
                         <p id="name">Samvrant Samantaray</p>
                         <p style="font-size: 4vw; color: #474747; margin-top: -4vw" id="gp">Male, 9810049980</p>
-                        <p style="font-size: 4vw; color: #474747; margin-top: -4vw" id="gp">Blood Group: B+</p>
+                        <p style="font-size: 4vw; color: #474747; margin-top: -4vw" id="bg">Blood Group: B+</p>
                     </div>
                 </div>
                 <div class="user-info">
