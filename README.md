@@ -2,7 +2,7 @@
 
 ## Problem Statement ⚠️
 
-The [Global status report](https://www.who.int/publications-detail-redirect/9789241565684) on road safety **by WHO, published in **2018**, highlights that the number of annual road traffic deaths has reached **1.35 million**. Road traffic injuries are now the leading killer of people aged between **5-29 years.**
+The [Global status report](https://www.who.int/publications-detail-redirect/9789241565684) on road safety by WHO, published in **2018**, highlights that the number of annual road traffic deaths has reached **1.35 million**. Road traffic injuries are now the leading killer of people aged between **5-29 years.**
 
 A few major causes of these deaths and critical injuries are the **late medical response**, **bystanders’ negligence,** and **inability to contact** the right emergency services. The matter in concern is very critical and for the person involved in such accidents, every second is crucial for their health. 
 

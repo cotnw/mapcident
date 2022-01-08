@@ -4,23 +4,9 @@
 <head>
     <title>Mapcident</title>
     <link rel="icon" href="/assets/logo-mc.png" sizes="16x16" type="image/png">
+    <link rel="stylesheet" href="/css/session.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <style type="text/css">
-        html {
-            height: 100%;
-        }
-        
-        body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-        
-        #map {
-            height: 100%;
-            width: 100%;
-        }
-    </style>
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io("http://localhost:3000");
@@ -33,99 +19,43 @@
 
 <body>
     <div id="map"></div>
-    <script>
-        var map = null;
-        var marker = [];
-        let crashes = [
-            [28.388988, 77.057178]
-        ];
-        let currentPosition = [];
-        navigator.geolocation.getCurrentPosition(showPosition);
-
-        function showPosition(position) {
-            currentPosition = [position.coords.latitude, position.coords.longitude];
-            console.log(currentPosition);
-            map = new MapmyIndia.Map('map', {
-                center: currentPosition,
-                zoomControl: true,
-                hybrid: true
-            });
-
-            function mapmyindia_fit_markers_into_bound(position) {
-                var maxlat = position.lat;
-                var maxlon = position.lng;
-                var minlat = position.lat;
-                var minlon = position.lng;
-                var southWest = L.latLng(maxlat, maxlon);
-                var northEast = L.latLng(minlat, minlon);
-                var bounds = L.latLngBounds(southWest, northEast);
-                map.fitBounds(bounds);
-            }
-
-            function addMarker(position, icon, title, draggable) {
-                if (icon == '') {
-                    var mk = new L.Marker(position, {
-                        draggable: draggable,
-                        title: title
-                    });
-                } else {
-                    var mk = new L.Marker(position, {
-                        icon: icon,
-                        draggable: draggable,
-                        title: title
-                    });
-                }
-                map.addLayer(mk);
-                mk.on("click", function(e) {
-                    mapmyindia_fit_markers_into_bound(position);
-                    calculateDistance(position);
-                });
-                return mk;
-            }
-
-            function calculateDistance(crashPosition) {
-                let url = `https://api.radar.io/v1/route/distance?origin=${currentPosition[0]},${currentPosition[1]}&destination=${crashPosition.lat},${crashPosition.lng}&modes=car&units=metric`;
-                fetch(url, {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': 'prj_live_sk_023b2379b86ae218901dd83336e69dce2f8276ac'
-                        }
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        console.log(data);
-                    })
-                    .catch(err => console.log(err));
-            }
-
-            function markCurrentLocation() {
-                var icon = L.icon({
-                    iconUrl: 'https://media.discordapp.net/attachments/872743735388172318/929084635126857768/unknown.png',
-                    iconRetinaUrl: 'https://media.discordapp.net/attachments/872743735388172318/929084635126857768/unknown.png',
-                    iconSize: [30, 30],
-                    popupAnchor: [-3, -15]
-                });
-                var position = new L.LatLng(currentPosition[0], currentPosition[1]);
-                var mk = addMarker(currentPosition, icon, 'Current Location', false);
-            }
-
-            function loadAllCrashes() {
-                var icon = L.icon({
-                    iconUrl: 'https://media.discordapp.net/attachments/872743735388172318/929051528285806642/unknown.png',
-                    iconRetinaUrl: 'https://media.discordapp.net/attachments/872743735388172318/929051528285806642/unknown.png',
-                    iconSize: [100, 100],
-                    popupAnchor: [-3, -15]
-                });
-                for (let i = 0; i < crashes.length; i++) {
-                    var position = new L.LatLng(crashes[i][0], crashes[i][1]);
-                    console.log(position)
-                    marker.push(addMarker(position, icon, "", false));
-                }
-            }
-            markCurrentLocation();
-            loadAllCrashes();
-        }
-    </script>
+    <div id="startModal" class="modal">
+        <div class="modal-content">
+            <img src="https://cdn.discordapp.com/attachments/872743735388172318/929360957921185803/unknown.png">
+            <h1>Starting Session</h1>
+            <p>We'll keep tracking your location while you're travelling. In case we detect any collision/accident we require the following</p>
+            <img id="perms" src="https://cdn.discordapp.com/attachments/872743735388172318/929365318650953778/unknown.png">
+            <button class="begin-session" id="begin">Begin</button>
+            <a href="/dashboard"><p id="gb">Go back</p></a>
+        </div>
+    </div>
+    <div id="alertModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <img id="map-img" src="https://cdn.discordapp.com/attachments/872743735388172318/929388296369492058/unknown.png">
+            <button class="dist">1.2km away</button>
+            <h1>Alert near you!</h1>
+            <p>We’ve detected an alert go off in an area near by your location! If you can responding to it</p>
+            <button class="begin-session">Respond</button>
+            <p id="skip">Skip</p>
+        </div>
+    </div>
+    <div id="map-custom-stuff">
+        <div class="top-bar">
+            <button class="timer">
+                00:48
+            </button>
+            <button class="end-button" id="end">
+                END
+            </button>
+        </div>
+        <div class="bottom-card" id="bottom-card">
+            <h1>2.3km away</h1>
+            <p style="margin-top: -4vw">Last updated 10s ago</p>
+            <p>Accident confirmed nearby you, please reach the marked location and check on the passenger’s status. Authorities and helplines have already been contacted.</p>
+            <button class="respond-button">Respond</button>
+        </div>
+    </div>
+    <script src="/js/session.js"></script>
 </body>
 
 </html>
