@@ -11,6 +11,7 @@ A worse scenario could be that someone is present a few miles from where you hav
 Such preventable yet tragic scenarios are present in our day-to-day life and lead to the 1.35 million deaths we see each year and that’s what we seek to solve with **Mapcident** 
 
 ## Solution ✅
+<img src="https://cdn.discordapp.com/attachments/872743735388172318/929514753926238288/https3A2F2Fs3-us-west-2.png">
 
 **Mapcident** - An app that uses the phone’s **accelerometer** to detect accidents and crashes. On detection of any such incidents it follows the following procedure:
 
@@ -48,7 +49,7 @@ Helping in such a situation is generally human nature, however, some people requ
 
 Knowing that this is a very sensitive issue, and false reporting could lead to a lot of stress among family members, we plan to alarm the user’s phone once a possible crash/accident is detected. Within a user-specified time (maximum of 2 minutes) of the alarm, the user can manually reject a false claim, and our app would note the data/readings in that case to prevent similar false claims in the future.
 
-Another questionable yet possible act from the user end was the possibility of a user faking a helping act just to earn credits. This was a crucial hurdle for us since if not handled correctly it would’ve disrupted the functioning of the whole product. We tackled it by using Resonance  that verifies the assistance only if the helper’s microphone is detected within the range of the victim’s device.
+Another questionable yet possible act from the user end was the possibility of a user faking a helping act just to earn credits. This was a crucial hurdle for us since if not handled correctly it would’ve disrupted the functioning of the whole product. We tackled it by using Radar.io’s distance API that verifies the assistance is detected within 10 meters of the victim’s device.
 
 Looking at this situation from a user experience perspective we have designed the user interface such that it’s easily navigable and accessible. Emphasis on big buttons and text is prominent throughout the app and usage of bright red color for the SOS pop-screens makes it easier for users to identify the screens and alerts.
 
@@ -63,6 +64,7 @@ Looking at this situation from a user experience perspective we have designed th
 7. Resonance
 8. Geolocation API 
 9. Socket.io
+10. Radar.io
 
 ## Future Prospects 🔮
 
