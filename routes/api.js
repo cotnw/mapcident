@@ -48,4 +48,20 @@ router.get('/user/socket', (req, res) => {
 
 })
 
+router.get('/user/success', (req, res) => {
+    User.findById(req.query.token).then(user => {
+        user.karma = user.karma + 10;
+        user.save()
+        res.json({ success: true })
+    })
+})
+
+router.post('/user/record', (req, res) => {
+    User.findById(req.query.token).then(user => {
+        user.past_records.push(req.body);
+        user.save();
+        res.json({ success: true })
+    })
+})
+
 module.exports = router

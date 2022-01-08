@@ -5,15 +5,16 @@ let currentPosition = [];
 let currentMarkerLocation = [];
 let resonanceId = "";
 navigator.geolocation.getCurrentPosition(showPosition);
+let karma = 0;
 
 window.resonanceAsyncInit = function() {
     if (!Resonance.isCompatible()) {
         console.error('Your browser is not supported');
     }
-    console.log('resonance;')
+
     var resonance = new Resonance('9ab05624-9086-4b88-9606-a8ffad4932ed');
 
-    resonance.startSearch('Hey', function(error) {
+    resonance.startSearch('LAPTOP', function(error) {
         if (error) {
             console.error(error.message);
         } else {
@@ -37,6 +38,7 @@ window.resonanceAsyncInit = function() {
         }
     });
 };
+
 
 function timeSince(date) {
 
@@ -138,6 +140,7 @@ function showPosition(position) {
             })
             .then(res => res.json())
             .then(data => {
+                console.log(data)
                 document.querySelector('#bottom-card > h1').innerHTML = data.routes.car.distance.text + ' away';
                 document.querySelector('#bottom-card > p').innerHTML = 'Last updated ' + timeSince(date) + ' ago';
                 document.querySelector('#expanded-bottom-card > div > div > h1').innerHTML = data.routes.car.distance.text + ' away';
@@ -209,6 +212,34 @@ document.getElementById('bottom-card-respond-button').addEventListener('click', 
     document.getElementById('expanded-bottom-card').style.display = 'block'
 })
 
+document.getElementsByClassName('pending-button')[0].addEventListener('click', () => {
+    navigator.geolocation.getCurrentPosition(curPosition);
+
+    function curPosition(position) {
+        let url = `https://api.radar.io/v1/route/distance?origin=${position.coords.latitude},${position.coords.longitude}&destination=${currentMarkerLocation[0]},${currentMarkerLocation[1]}&modes=car&units=metric`;
+        fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'prj_live_sk_023b2379b86ae218901dd83336e69dce2f8276ac'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.routes.car.distance.value <= 10) {
+                    document.getElementsByClassName('pending-button')[0].style.background = '#43B862';
+                    document.getElementsByClassName('pending-button')[0].innerText = 'Success';
+                    karma += 10;
+                    fetch(`/api/user/success?token=${localStorage.getItem('accessToken')}`).then(res => res.json()).then(data => {}).catch(err => console.log(err));
+                    setTimeout(() => {
+                        document.getElementById('successAlert').style.display = "block";
+                    }, 2000)
+
+                }
+            })
+            .catch(err => console.log(err));
+    }
+})
+
 document.getElementById('respond-button').addEventListener('click', () => {
     document.getElementById('alertModal').style.display = 'none'
     document.getElementById('expanded-bottom-card').style.display = 'block'
@@ -216,8 +247,22 @@ document.getElementById('respond-button').addEventListener('click', () => {
 
 document.getElementById('end').addEventListener('click', () => {
     // send time of session and karma collected to a past record saving endpoint
-    console.log(document.getElementsByClassName('timer')[0].innerHTML)
-    window.location.href = '/dashboard';
+    fetch(`/api/user/record?token=${localStorage.getItem('accessToken')}`, {
+        method: 'POST',
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            date: '9th',
+            month: 'January',
+            day: 'Sunday',
+            creditsEarned: karma,
+            totalTime: document.getElementsByClassName('timer')[0].innerHTML
+        })
+    }).then(res => res.json()).then(data => {
+        window.location.href = '/dashboard';
+    }).catch(err => console.log(err));
 })
 
 function start() {
